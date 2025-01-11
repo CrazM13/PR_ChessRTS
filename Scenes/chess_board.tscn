@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://dqe7gynujmv"]
+
+[ext_resource type="Texture2D" uid="uid://ctfdlqgn4wlb6" path="res://Assets/Textures/ChessBoard.png" id="1_hlchf"]
+[ext_resource type="Script" path="res://Scripts/Camera/RTSCamera.cs" id="1_q3e0k"]
+
+[node name="ChessBoard" type="Node2D"]
+
+[node name="Parallax2D" type="Parallax2D" parent="."]
+repeat_size = Vector2(32, 32)
+repeat_times = 51
+
+[node name="Sprite2D" type="Sprite2D" parent="Parallax2D"]
+self_modulate = Color(0.832, 1, 0.82, 1)
+texture_filter = 1
+position = Vector2(640, 320)
+texture = ExtResource("1_hlchf")
+
+[node name="CameraRig" type="Node2D" parent="." node_paths=PackedStringArray("camera")]
+script = ExtResource("1_q3e0k")
+camera = NodePath("Camera2D")
+
+[node name="Camera2D" type="Camera2D" parent="CameraRig"]
+zoom = Vector2(4, 4)
