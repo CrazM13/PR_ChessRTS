@@ -1,11 +1,55 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
-public partial class GameManager : Node {
+public class GameManager {
 
 	public const float SQUARE_SIZE = 16;
 	public const int MAX_MOVE = 8;
 	public const float LOCK_TIME = 1;
+
+	private static GameManager instance = null;
+	public static GameManager Instance {
+		get {
+			instance ??= new GameManager();
+			return instance;
+		}
+	}
+
+	#region Piece Management
+	private List<ChessPiece> pieces = new List<ChessPiece>();
+	private Dictionary<Teams, PieceTypes> nextSpawns = new Dictionary<Teams, PieceTypes>();
+
+	public void Register(ChessPiece piece) {
+		pieces.Add(piece);
+	}
+
+	public void Deregister(ChessPiece piece) {
+		pieces.Remove(piece);
+	}
+
+	public ChessPiece GetPiece(Vector2I position) {
+		return pieces.Find((p) => p.BoardPosition == position);
+	}
+
+	public PieceTypes GetNextSpawn(Teams team) {
+		if (!nextSpawns.ContainsKey(team)) {
+			nextSpawns.Add(team, PieceTypes.PAWN);
+		}
+
+		return nextSpawns[team];
+	}
+
+	public void SetNextSpawn(Teams team, PieceTypes piece) {
+		if (!nextSpawns.ContainsKey(team)) {
+			nextSpawns.Add(team, piece);
+		} else {
+			nextSpawns[team] = piece;
+		}
+	}
+	#endregion
+
+
 
 	public static Vector2I GlobalToBoard(Vector2 globalPosition) {
 		int x = Mathf.FloorToInt(globalPosition.X / SQUARE_SIZE);

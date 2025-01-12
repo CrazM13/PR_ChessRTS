@@ -1,26 +1,29 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class KnightMovement : ChessMovement {
-	public override bool CanMoveTo(Vector2I from, Vector2I to) {
-		int xDiff = Mathf.Abs(from.X - to.X);
-		int yDiff = Mathf.Abs(to.Y - from.Y);
 
-		return (xDiff == 2 && yDiff == 1) || (xDiff == 1 && yDiff == 2);
-	}
+	private static readonly Vector2I[] KnightMoves = new Vector2I[] {
+		new Vector2I(2, 1),
+		new Vector2I(2, -1),
+		new Vector2I(-2, 1),
+		new Vector2I(-2, -1),
+		new Vector2I(1, 2),
+		new Vector2I(1, -2),
+		new Vector2I(-1, 2),
+		new Vector2I(-1, -2),
+	};
 
-	public override Vector2I[] GetMovementOptions(Vector2I position) {
+	public override Vector2I[] GetMovementOptions(ChessPiece piece) {
 
-		return new Vector2I[] {
-			position + new Vector2I(2, 1),
-			position + new Vector2I(2, -1),
-			position + new Vector2I(-2, 1),
-			position + new Vector2I(-2, -1),
-			position + new Vector2I(1, 2),
-			position + new Vector2I(1, -2),
-			position + new Vector2I(-1, 2),
-			position + new Vector2I(-1, -2),
-		};
+		List<Vector2I> totalMoves = new List<Vector2I>();
+
+		foreach (Vector2I move in KnightMoves) {
+			if (!IsTakenByTeam(piece.BoardPosition + move, piece.Team)) totalMoves.Add(piece.BoardPosition + move);
+		}
+
+		return totalMoves.ToArray();
 
 	}
 }

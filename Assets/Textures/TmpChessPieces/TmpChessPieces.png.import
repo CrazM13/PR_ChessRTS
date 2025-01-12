@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bueh08dekh6qw"
-path="res://.godot/imported/TestPiece.png-e8f4eb7e9d12e79b36d3aba6ae21714d.ctex"
+uid="uid://c8wc8xu57q14m"
+path="res://.godot/imported/TmpChessPieces.png-9ada7eb9a5247f1bd43ca7b9e25921d4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Textures/TestPiece.png"
-dest_files=["res://.godot/imported/TestPiece.png-e8f4eb7e9d12e79b36d3aba6ae21714d.ctex"]
+source_file="res://Assets/Textures/TmpChessPieces/TmpChessPieces.png"
+dest_files=["res://.godot/imported/TmpChessPieces.png-9ada7eb9a5247f1bd43ca7b9e25921d4.ctex"]
 
 [params]
 
