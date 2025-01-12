@@ -24,6 +24,31 @@ public partial class ChessPiece : Sprite2D {
 
 	}
 
+	public void MoveRandomly() {
+		if (isLocked) return;
+		RandomNumberGenerator rng = new RandomNumberGenerator();
+
+		Vector2I[] moves = Movement.GetMovementOptions(this);
+
+		int selected = rng.RandiRange(0, moves.Length - 1);
+
+		ChessPiece taken = GameManager.Instance.GetPiece(moves[selected]);
+		if (taken != null) {
+			GameManager.Instance.Deregister(taken);
+			taken.QueueFree();
+		}
+
+		BoardPosition = moves[selected];
+		GlobalPosition = GameManager.BoardToGlobal(BoardPosition);
+
+		isLocked = true;
+		this.SelfModulate = Colors.Gray.Lerp(TeamUtils.GetTeamColour(Team), 0.5f);
+		GetTree().CreateTimer(GameManager.LOCK_TIME).Timeout += () => {
+			isLocked = false;
+			this.SelfModulate = TeamUtils.GetTeamColour(Team);
+		};
+	}
+
 	public override void _Input(InputEvent @event) {
 		base._Input(@event);
 

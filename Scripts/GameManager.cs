@@ -32,6 +32,10 @@ public class GameManager {
 		return pieces.Find((p) => p.BoardPosition == position);
 	}
 
+	public ChessPiece[] GetAllPieces() {
+		return pieces.ToArray();
+	}
+
 	public PieceTypes GetNextSpawn(Teams team) {
 		if (!nextSpawns.ContainsKey(team)) {
 			nextSpawns.Add(team, PieceTypes.PAWN);

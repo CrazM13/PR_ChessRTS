@@ -45,9 +45,15 @@ public partial class ChessPieceSpawner : Node2D {
 		timeUntilSpawn -= (float) delta;
 		if (timeUntilSpawn <= 0) {
 			
-			AttemptSpawn();
+			if (IsInstanceValid(king)) {
+				AttemptSpawn();
+
+				timeUntilSpawn = spawnInterval;
+			} else {
+				QueueFree();
+			}
+
 			
-			timeUntilSpawn = spawnInterval;
 		}
 
 	}

@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://dqe7gynujmv"]
+[gd_scene load_steps=5 format=3 uid="uid://dqe7gynujmv"]
 
 [ext_resource type="Texture2D" uid="uid://ctfdlqgn4wlb6" path="res://Assets/Textures/ChessBoard.png" id="1_hlchf"]
 [ext_resource type="Script" path="res://Scripts/Camera/RTSCamera.cs" id="1_q3e0k"]
 [ext_resource type="Script" path="res://Scripts/ChessPieces/ChessPieceSpawner.cs" id="3_6n0yo"]
+[ext_resource type="Script" path="res://Scripts/OpponentAI.cs" id="4_mmvq6"]
 
 [node name="ChessBoard" type="Node2D"]
 texture_filter = 1
@@ -32,3 +33,18 @@ rookSprite = "res://Assets/Textures/TmpChessPieces/Rook.tres"
 bishopSprite = "res://Assets/Textures/TmpChessPieces/Bishop.tres"
 knightSprite = "res://Assets/Textures/TmpChessPieces/Knight.tres"
 pawnSprite = "res://Assets/Textures/TmpChessPieces/Pawn.tres"
+
+[node name="OppKing1" type="Node2D" parent="."]
+position = Vector2(71, -39)
+script = ExtResource("3_6n0yo")
+team = 1
+kingSprite = "res://Assets/Textures/TmpChessPieces/King.tres"
+queenSprite = "res://Assets/Textures/TmpChessPieces/Queen.tres"
+rookSprite = "res://Assets/Textures/TmpChessPieces/Rook.tres"
+bishopSprite = "res://Assets/Textures/TmpChessPieces/Bishop.tres"
+knightSprite = "res://Assets/Textures/TmpChessPieces/Knight.tres"
+pawnSprite = "res://Assets/Textures/TmpChessPieces/Pawn.tres"
+
+[node name="AI" type="Node" parent="."]
+script = ExtResource("4_mmvq6")
+thinkInterval = 1.0
