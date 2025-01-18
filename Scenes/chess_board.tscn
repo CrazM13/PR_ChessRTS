@@ -1,12 +1,24 @@
-[gd_scene load_steps=5 format=3 uid="uid://dqe7gynujmv"]
+[gd_scene load_steps=7 format=3 uid="uid://dqe7gynujmv"]
 
+[ext_resource type="Script" path="res://Scripts/Cheat.cs" id="1_6im1v"]
 [ext_resource type="Texture2D" uid="uid://ctfdlqgn4wlb6" path="res://Assets/Textures/ChessBoard.png" id="1_hlchf"]
+[ext_resource type="Script" path="res://Scripts/ChessPieces/MovementVisualization.cs" id="1_ncftq"]
 [ext_resource type="Script" path="res://Scripts/Camera/RTSCamera.cs" id="1_q3e0k"]
 [ext_resource type="Script" path="res://Scripts/ChessPieces/ChessPieceSpawner.cs" id="3_6n0yo"]
 [ext_resource type="Script" path="res://Scripts/OpponentAI.cs" id="4_mmvq6"]
 
 [node name="ChessBoard" type="Node2D"]
+z_index = -10
+z_as_relative = false
 texture_filter = 1
+script = ExtResource("1_6im1v")
+
+[node name="Visualizer" type="Node2D" parent="."]
+z_index = -5
+z_as_relative = false
+script = ExtResource("1_ncftq")
+movementSpaceColour = Color(0, 1, 0, 0.12549)
+captureSpaceColour = Color(1, 0, 0, 0.25098)
 
 [node name="Parallax2D" type="Parallax2D" parent="."]
 repeat_size = Vector2(32, 32)

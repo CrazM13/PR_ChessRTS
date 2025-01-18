@@ -23,7 +23,7 @@ public partial class PawnMovement : ChessMovement {
 		List<Vector2I> totalMoves = new List<Vector2I>();
 
 		foreach (Vector2I move in pawnMoves) {
-			if (!IsTakenByTeam(piece.BoardPosition + move, piece.Team)) totalMoves.Add(piece.BoardPosition + move);
+			if (!IsTaken(piece.BoardPosition + move)) totalMoves.Add(piece.BoardPosition + move);
 		}
 
 		foreach (Vector2I move in pawnCaptures) {

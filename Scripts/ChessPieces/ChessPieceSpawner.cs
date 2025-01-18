@@ -27,13 +27,13 @@ public partial class ChessPieceSpawner : Node2D {
 	public override void _Ready() {
 		base._Ready();
 
-		queenBuilder = new ChessPieceBuilder(pawnSprite, new QueenMovement());
-		rookBuilder = new ChessPieceBuilder(pawnSprite, new RookMovement());
-		bishopBuilder = new ChessPieceBuilder(pawnSprite, new BishopMovement());
-		knightBuilder = new ChessPieceBuilder(pawnSprite, new KnightMovement());
-		pawnBuilder = new ChessPieceBuilder(pawnSprite, new PawnMovement());
+		queenBuilder = new ChessPieceBuilder(queenSprite, new QueenMovement()).AddReward(PieceTypes.QUEEN);
+		rookBuilder = new ChessPieceBuilder(rookSprite, new RookMovement()).AddReward(PieceTypes.QUEEN);
+		bishopBuilder = new ChessPieceBuilder(bishopSprite, new BishopMovement()).AddReward(PieceTypes.ROOK);
+		knightBuilder = new ChessPieceBuilder(knightSprite, new KnightMovement()).AddReward(PieceTypes.BISHOP);
+		pawnBuilder = new ChessPieceBuilder(pawnSprite, new PawnMovement()).AddReward(PieceTypes.KNIGHT);
 
-		king = new ChessPieceBuilder(kingSprite, new KingMovement()).Build(GameManager.GlobalToBoard(this.GlobalPosition));
+		king = new ChessPieceBuilder(kingSprite, new KingMovement()).AddReward(PieceTypes.QUEEN).Build(GameManager.GlobalToBoard(this.GlobalPosition));
 		king.Team = team;
 		AddChild(king);
 		timeUntilSpawn = spawnInterval;
@@ -95,7 +95,8 @@ public partial class ChessPieceSpawner : Node2D {
 			newPiece.Team = team;
 			AddSibling(newPiece);
 		}
-		
+
+		GameManager.Instance.SetNextSpawn(team, PieceTypes.PAWN);
 	}
 
 }

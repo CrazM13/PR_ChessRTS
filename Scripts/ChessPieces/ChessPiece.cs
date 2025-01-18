@@ -6,6 +6,7 @@ public partial class ChessPiece : Sprite2D {
 	public Vector2I BoardPosition { get; set; }
 	public ChessMovement Movement { get; set; }
 	public Teams Team { get; set; }
+	public PieceTypes Reward { get; set; }
 
 	private bool isMoving = false;
 	private bool isLocked = false;
@@ -21,7 +22,6 @@ public partial class ChessPiece : Sprite2D {
 		base._Process(delta);
 
 		AttemptContinueDrag();
-
 	}
 
 	public void MoveRandomly() {
@@ -34,8 +34,7 @@ public partial class ChessPiece : Sprite2D {
 
 		ChessPiece taken = GameManager.Instance.GetPiece(moves[selected]);
 		if (taken != null) {
-			GameManager.Instance.Deregister(taken);
-			taken.QueueFree();
+			TakePiece(taken);
 		}
 
 		BoardPosition = moves[selected];
@@ -80,20 +79,22 @@ public partial class ChessPiece : Sprite2D {
 			if (isMoving) {
 				this.GlobalPosition = GetGlobalMousePosition();
 
+				GameManager.Instance.Visualizer.ClearVisuals();
+
 				if (!Input.IsMouseButtonPressed(MouseButton.Left)) {
 					Vector2I newPosition = GameManager.GlobalToBoard(this.GlobalPosition);
 					if (Movement.CanMoveTo(this, newPosition)) {
 
 						ChessPiece taken = GameManager.Instance.GetPiece(newPosition);
 						if (taken != null) {
-							GameManager.Instance.Deregister(taken);
-							taken.QueueFree();
+							TakePiece(taken);
 						}
 
 						BoardPosition = newPosition;
 
 						isLocked = true;
 						this.SelfModulate = Colors.Gray.Lerp(TeamUtils.GetTeamColour(Team), 0.5f);
+						AddChild(new TimerDisplay() { Duration = GameManager.LOCK_TIME });
 						GetTree().CreateTimer(GameManager.LOCK_TIME).Timeout += () => {
 							isLocked = false;
 							this.SelfModulate = TeamUtils.GetTeamColour(Team);
@@ -103,7 +104,32 @@ public partial class ChessPiece : Sprite2D {
 					this.Offset = Vector2.Zero;
 					GlobalPosition = GameManager.BoardToGlobal(BoardPosition);
 					isMoving = false;
+				} else {
+					DisplayMovement();
 				}
+			}
+		}
+	}
+
+	private void TakePiece(ChessPiece taken) {
+		PieceTypes reward = taken.Reward;
+		PieceTypes nextSpawn = GameManager.Instance.GetNextSpawn(Team);
+		if (nextSpawn < reward) {
+			GameManager.Instance.SetNextSpawn(Team, reward);
+		}
+
+		GameManager.Instance.Deregister(taken);
+		taken.QueueFree();
+	}
+
+	private void DisplayMovement() {
+		Vector2I[] movementOptipons = Movement.GetMovementOptions(this);
+		for (int i = 0; i < movementOptipons.Length; i++) {
+			Vector2I position = movementOptipons[i];
+			if (ChessMovement.IsTaken(position)) {
+				GameManager.Instance.Visualizer.AddVisual(position, MovementVisualization.Visual.CAPTURE);
+			} else {
+				GameManager.Instance.Visualizer.AddVisual(position, MovementVisualization.Visual.MOVEMENT);
 			}
 		}
 	}

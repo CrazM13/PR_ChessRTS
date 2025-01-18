@@ -16,6 +16,8 @@ public class GameManager {
 		}
 	}
 
+	public MovementVisualization Visualizer { get; set; }
+
 	#region Piece Management
 	private List<ChessPiece> pieces = new List<ChessPiece>();
 	private Dictionary<Teams, PieceTypes> nextSpawns = new Dictionary<Teams, PieceTypes>();

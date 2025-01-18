@@ -2,10 +2,10 @@ using Godot;
 using System;
 
 public enum PieceTypes {
-	KING = 0,
-	PAWN = 1,
-	KNIGHT = 2,
-	BISHOP = 3,
-	ROOK = 4,
-	QUEEN = 5,
+	PAWN = 0,
+	KNIGHT = 1,
+	BISHOP = 2,
+	ROOK = 3,
+	QUEEN = 4,
+	KING = 5,
 }
