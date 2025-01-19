@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ChessPieceSet" load_steps=2 format=3 uid="uid://dbwguoitsccc2"]
+
+[ext_resource type="Script" path="res://Scripts/ChessPieces/ChessPieceSet.cs" id="1_gnqy0"]
+
+[resource]
+script = ExtResource("1_gnqy0")
+kingSprite = "res://Assets/Textures/ChessPieces/King.png"
+kingSpriteOverlay = "res://Assets/Textures/ChessPieces/King_Color_2.png"
+queenSprite = "res://Assets/Textures/TmpChessPieces/Queen.tres"
+queenSpriteOverlay = "res://Assets/Textures/TmpChessPieces/Queen.tres"
+rookSprite = "res://Assets/Textures/TmpChessPieces/Rook.tres"
+rookSpriteOverlay = "res://Assets/Textures/TmpChessPieces/Rook.tres"
+bishopSprite = "res://Assets/Textures/TmpChessPieces/Bishop.tres"
+bishopSpriteOverlay = "res://Assets/Textures/TmpChessPieces/Bishop.tres"
+knightSprite = "res://Assets/Textures/ChessPieces/Knight.png"
+knightSpriteOverlay = "res://Assets/Textures/ChessPieces/Knight_Color.png"
+pawnSprite = "res://Assets/Textures/TmpChessPieces/Pawn.tres"
+pawnSpriteOverlay = "res://Assets/Textures/TmpChessPieces/Pawn.tres"

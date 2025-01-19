@@ -7,33 +7,16 @@ public partial class ChessPieceSpawner : Node2D {
 	[Export] private float spawnInterval = 10;
 	[Export] private Teams team;
 
-	[ExportGroup("Sprite Paths")]
-	[Export] private string kingSprite;
-	[Export] private string queenSprite;
-	[Export] private string rookSprite;
-	[Export] private string bishopSprite;
-	[Export] private string knightSprite;
-	[Export] private string pawnSprite;
+	[Export] public ChessPieceSet chessPieceSet;
 
 	private float timeUntilSpawn;
-
-	private ChessPieceBuilder queenBuilder;
-	private ChessPieceBuilder rookBuilder;
-	private ChessPieceBuilder bishopBuilder;
-	private ChessPieceBuilder knightBuilder;
-	private ChessPieceBuilder pawnBuilder;
-	
 
 	public override void _Ready() {
 		base._Ready();
 
-		queenBuilder = new ChessPieceBuilder(queenSprite, new QueenMovement()).AddReward(PieceTypes.QUEEN);
-		rookBuilder = new ChessPieceBuilder(rookSprite, new RookMovement()).AddReward(PieceTypes.QUEEN);
-		bishopBuilder = new ChessPieceBuilder(bishopSprite, new BishopMovement()).AddReward(PieceTypes.ROOK);
-		knightBuilder = new ChessPieceBuilder(knightSprite, new KnightMovement()).AddReward(PieceTypes.BISHOP);
-		pawnBuilder = new ChessPieceBuilder(pawnSprite, new PawnMovement()).AddReward(PieceTypes.KNIGHT);
+		chessPieceSet.Init();
 
-		king = new ChessPieceBuilder(kingSprite, new KingMovement()).AddReward(PieceTypes.QUEEN).Build(GameManager.GlobalToBoard(this.GlobalPosition));
+		king = chessPieceSet.Spawn(PieceTypes.KING, GameManager.GlobalToBoard(this.GlobalPosition));
 		king.Team = team;
 		AddChild(king);
 		timeUntilSpawn = spawnInterval;
@@ -71,25 +54,7 @@ public partial class ChessPieceSpawner : Node2D {
 	}
 
 	private void Spawn(Vector2I position) {
-		ChessPiece newPiece = null;
-
-		switch (GameManager.Instance.GetNextSpawn(team)) {
-			case PieceTypes.PAWN:
-				newPiece = pawnBuilder.Build(position);
-				break;
-			case PieceTypes.KNIGHT:
-				newPiece = knightBuilder.Build(position);
-				break;
-			case PieceTypes.BISHOP:
-				newPiece = bishopBuilder.Build(position);
-				break;
-			case PieceTypes.ROOK:
-				newPiece = rookBuilder.Build(position);
-				break;
-			case PieceTypes.QUEEN:
-				newPiece = queenBuilder.Build(position);
-				break;
-		}
+		ChessPiece newPiece = chessPieceSet.Spawn(GameManager.Instance.GetNextSpawn(team), position);
 
 		if (newPiece != null) {
 			newPiece.Team = team;

@@ -4,12 +4,18 @@ using System;
 public class ChessPieceBuilder {
 
 	public Texture2D Sprite { get; set; }
+	public Texture2D OverlaySprite { get; set; }
 	public ChessMovement MovementType { get; set; }
 	public PieceTypes Reward { get; set; }
 
-	public ChessPieceBuilder(string spritePath, ChessMovement movementType) {
-		this.Sprite = ResourceLoader.Load<Texture2D>(spritePath);
+	public ChessPieceBuilder(string spritePath, string overlaySpritePath) {
+		Sprite = ResourceLoader.Load<Texture2D>(spritePath);
+		OverlaySprite = ResourceLoader.Load<Texture2D>(overlaySpritePath);
+	}
+
+	public ChessPieceBuilder AddMovement(ChessMovement movementType) {
 		this.MovementType = movementType;
+		return this;
 	}
 
 	public ChessPieceBuilder AddReward(PieceTypes reward) {
@@ -25,6 +31,7 @@ public class ChessPieceBuilder {
 		piece.Texture = this.Sprite;
 		piece.Movement = this.MovementType;
 		piece.Reward = this.Reward;
+		piece.Overlay = this.OverlaySprite;
 		
 		return piece;
 	}

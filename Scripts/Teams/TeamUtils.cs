@@ -6,7 +6,7 @@ public static class TeamUtils {
 	public static Color GetTeamColour(Teams team) {
 		return team switch {
 			Teams.WHITE => Colors.White,
-			Teams.BLACK => Colors.Black,
+			Teams.BLACK => Colors.DarkGray.Darkened(0.2f),
 			Teams.RED => Colors.Red,
 			Teams.GREEN => Colors.Green,
 			Teams.BLUE => Colors.Blue,

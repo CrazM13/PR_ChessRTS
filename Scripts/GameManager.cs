@@ -4,9 +4,10 @@ using System.Collections.Generic;
 
 public class GameManager {
 
-	public const float SQUARE_SIZE = 16;
+	public const float SQUARE_SIZE = 32;
 	public const int MAX_MOVE = 8;
 	public const float LOCK_TIME = 1;
+	public const float SIGHT_DISTANCE = 64;
 
 	private static GameManager instance = null;
 	public static GameManager Instance {
@@ -17,6 +18,7 @@ public class GameManager {
 	}
 
 	public MovementVisualization Visualizer { get; set; }
+	public GameAudio Audio { get; set; }
 
 	#region Piece Management
 	private List<ChessPiece> pieces = new List<ChessPiece>();

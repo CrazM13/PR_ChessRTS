@@ -8,20 +8,40 @@ public partial class ChessPiece : Sprite2D {
 	public Teams Team { get; set; }
 	public PieceTypes Reward { get; set; }
 
+	public Texture2D Overlay { get; set; }
+
 	private bool isMoving = false;
 	private bool isLocked = false;
+
+	private Vector2I? moveTo = null;
 
 	public override void _Ready() {
 		base._Ready();
 
-		this.SelfModulate = TeamUtils.GetTeamColour(Team);
 		GameManager.Instance.Register(this);
+		GlobalPosition = GameManager.BoardToGlobal(BoardPosition);
+
+		if (Team == Teams.WHITE) {
+			FogOfWar.Instance.UpdateVisabilityPoints(Teams.WHITE);
+		}
 	}
 
 	public override void _Process(double delta) {
 		base._Process(delta);
 
 		AttemptContinueDrag();
+
+		if (moveTo.HasValue) {
+			Vector2 globalMoveTo = GameManager.BoardToGlobal(moveTo.Value);
+			this.GlobalPosition = this.GlobalPosition.MoveToward(globalMoveTo, (float) delta * 100);
+			if (this.GlobalPosition == globalMoveTo) {
+				GameManager.Instance.Audio.PlayAt(moveTo.Value);
+				moveTo = null;
+			}
+		}
+
+		float alpha = FogOfWar.Instance.GetVisability(BoardPosition);
+		this.Modulate = new Color(this.Modulate.R, this.Modulate.G, this.Modulate.B, alpha);
 	}
 
 	public void MoveRandomly() {
@@ -38,14 +58,9 @@ public partial class ChessPiece : Sprite2D {
 		}
 
 		BoardPosition = moves[selected];
-		GlobalPosition = GameManager.BoardToGlobal(BoardPosition);
+		moveTo = BoardPosition;
 
-		isLocked = true;
-		this.SelfModulate = Colors.Gray.Lerp(TeamUtils.GetTeamColour(Team), 0.5f);
-		GetTree().CreateTimer(GameManager.LOCK_TIME).Timeout += () => {
-			isLocked = false;
-			this.SelfModulate = TeamUtils.GetTeamColour(Team);
-		};
+		LockPiece();
 	}
 
 	public override void _Input(InputEvent @event) {
@@ -82,8 +97,10 @@ public partial class ChessPiece : Sprite2D {
 				GameManager.Instance.Visualizer.ClearVisuals();
 
 				if (!Input.IsMouseButtonPressed(MouseButton.Left)) {
+					
 					Vector2I newPosition = GameManager.GlobalToBoard(this.GlobalPosition);
 					if (Movement.CanMoveTo(this, newPosition)) {
+						GameManager.Instance.Audio.PlayAt(newPosition);
 
 						ChessPiece taken = GameManager.Instance.GetPiece(newPosition);
 						if (taken != null) {
@@ -91,14 +108,9 @@ public partial class ChessPiece : Sprite2D {
 						}
 
 						BoardPosition = newPosition;
+						LockPiece();
 
-						isLocked = true;
-						this.SelfModulate = Colors.Gray.Lerp(TeamUtils.GetTeamColour(Team), 0.5f);
-						AddChild(new TimerDisplay() { Duration = GameManager.LOCK_TIME });
-						GetTree().CreateTimer(GameManager.LOCK_TIME).Timeout += () => {
-							isLocked = false;
-							this.SelfModulate = TeamUtils.GetTeamColour(Team);
-						};
+						FogOfWar.Instance.UpdateVisabilityPoints(Team);
 					}
 
 					this.Offset = Vector2.Zero;
@@ -132,6 +144,22 @@ public partial class ChessPiece : Sprite2D {
 				GameManager.Instance.Visualizer.AddVisual(position, MovementVisualization.Visual.MOVEMENT);
 			}
 		}
+	}
+
+	public override void _Draw() {
+		base._Draw();
+
+		DrawTexture(Overlay, this.GetRect().Position, TeamUtils.GetTeamColour(Team));
+	}
+
+	private void LockPiece() {
+		isLocked = true;
+		this.SelfModulate = Colors.Gray;
+		AddChild(new TimerDisplay() { Duration = GameManager.LOCK_TIME, SelfModulate = TeamUtils.GetTeamColour(Team) });
+		GetTree().CreateTimer(GameManager.LOCK_TIME).Timeout += () => {
+			isLocked = false;
+			this.SelfModulate = Colors.White;
+		};
 	}
 
 }
